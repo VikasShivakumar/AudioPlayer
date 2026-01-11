@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">ऑडियो प्लेयर</string>
+    <string name="library">लाइब्रेरी</string>
+    <string name="search">खोजें</string>
+    <string name="playlists">प्लेलिस्ट</string>
+    <string name="settings">सेटिंग्स</string>
+    <string name="scan">स्कैन करें</string>
+    <string name="tracks">गाने</string>
+    <string name="albums">एल्बम</string>
+    <string name="artists">कलाकार</string>
+    <string name="now_playing">अभी चल रहा है</string>
+    <string name="sleep_timer">स्लीप टाइमर</string>
+    <string name="dark_theme">डार्क थीम</string>
+    <string name="equalizer">इक्वलाइज़र</string>
+</resources>
