@@ -3,9 +3,11 @@ package com.vikas.androidaudioplayer.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import com.vikas.androidaudioplayer.service.playback.EqualizerController
 import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class EqualizerState(
@@ -29,7 +31,15 @@ class EqualizerViewModel @Inject constructor(
     val uiState: StateFlow<EqualizerState> = _uiState.asStateFlow()
 
     init {
-        loadEqualizerSettings()
+        viewModelScope.launch {
+            equalizerController.equalizerState.collect { equalizer ->
+                if (equalizer != null) {
+                    loadEqualizerSettings()
+                } else {
+                    _uiState.value = EqualizerState()
+                }
+            }
+        }
     }
 
     private fun loadEqualizerSettings() {

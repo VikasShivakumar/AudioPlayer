@@ -43,7 +43,11 @@ class PlaylistDetailViewModel @Inject constructor(
         )
 
     fun playTrack(track: AudioTrack) {
-        playTrackUseCase(track)
+        val currentTracks = tracks.value
+        val index = currentTracks.indexOfFirst { it.id == track.id }
+        if (index != -1) {
+            playTrackUseCase(currentTracks, index)
+        }
     }
 
     fun addTrackToPlaylist(playlistId: String, track: AudioTrack) {

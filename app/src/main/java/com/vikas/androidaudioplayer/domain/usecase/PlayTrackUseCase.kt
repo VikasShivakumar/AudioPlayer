@@ -7,7 +7,9 @@ import javax.inject.Inject
 class PlayTrackUseCase @Inject constructor(
     private val playbackController: PlaybackController
 ) {
-    operator fun invoke(track: AudioTrack) {
-        playbackController.play(track)
+    operator fun invoke(tracks: List<AudioTrack>, startIndex: Int = 0) {
+        if (tracks.isNotEmpty() && startIndex in tracks.indices) {
+            playbackController.playAll(tracks, startIndex)
+        }
     }
 }

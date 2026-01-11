@@ -55,7 +55,11 @@ class SearchViewModel @Inject constructor(
     }
 
     fun playTrack(track: AudioTrack) {
-        playTrackUseCase(track)
+        val currentResults = searchResults.value
+        val index = currentResults.indexOfFirst { it.id == track.id }
+        if (index != -1) {
+            playTrackUseCase(currentResults, index)
+        }
     }
 
     fun addTrackToPlaylist(playlistId: String, track: AudioTrack) {

@@ -33,6 +33,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.vikas.androidaudioplayer.R
 import com.vikas.androidaudioplayer.presentation.viewmodel.NowPlayingViewModel
 import com.vikas.androidaudioplayer.util.Formatter
 
@@ -63,17 +72,34 @@ fun NowPlayingScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Album Art Placeholder
-        Box(
+        // Album Art
+        val infiniteTransition = rememberInfiniteTransition(label = "AlbumArtRotation")
+        val rotation by infiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = 360f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(10000, easing = LinearEasing),
+                repeatMode = RepeatMode.Restart
+            ),
+            label = "Rotation"
+        )
+        
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(mediaItem?.mediaMetadata?.artworkUri)
+                .crossfade(true)
+                .error(R.drawable.ic_gramophone)
+                .placeholder(R.drawable.ic_gramophone)
+                .build(),
+            contentDescription = "Album Art",
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(300.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.secondaryContainer),
-            contentAlignment = Alignment.Center
-        ) {
-            // AsyncImage with coil would go here using mediaItem.mediaMetadata.artworkUri
-            Text("Album Art", style = MaterialTheme.typography.headlineMedium)
-        }
+                .clip(CircleShape) // Gramophone record style
+                .background(MaterialTheme.colorScheme.secondaryContainer)
+                .then(if (state.isPlaying) Modifier.rotate(rotation) else Modifier)
+                .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -128,12 +154,14 @@ fun NowPlayingScreen(
                 onClick = { viewModel.togglePlayPause() },
                 modifier = Modifier.size(72.dp)
             ) {
-                Icon(
-                    imageVector = if (state.isPlaying) Icons.Default.PauseCircleFilled else Icons.Default.PlayCircleFilled,
-                    contentDescription = if (state.isPlaying) "Pause" else "Play",
-                    modifier = Modifier.fillMaxSize(),
-                    tint = MaterialTheme.colorScheme.primary
-                )
+                androidx.compose.animation.Crossfade(targetState = state.isPlaying, label = "PlayPauseAnimation") { isPlaying ->
+                    Icon(
+                        imageVector = if (isPlaying) Icons.Default.PauseCircleFilled else Icons.Default.PlayCircleFilled,
+                        contentDescription = if (isPlaying) "Pause" else "Play",
+                        modifier = Modifier.fillMaxSize(),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
             
             IconButton(onClick = { viewModel.skipToNext() }, modifier = Modifier.size(48.dp)) {
