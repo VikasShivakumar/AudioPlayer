@@ -51,20 +51,24 @@ class PlaybackController @Inject constructor(
 
     val player: Player get() = _player
 
-    fun play(track: AudioTrack) {
-        val mediaItem = MediaItem.Builder()
-            .setUri(track.path)
-            .setMediaId(track.id)
+    private fun AudioTrack.toMediaItem(): MediaItem {
+        return MediaItem.Builder()
+            .setUri(path)
+            .setMediaId(id)
             .setMediaMetadata(
                 MediaMetadata.Builder()
-                    .setTitle(track.title)
-                    .setArtist(track.artist)
-                    .setAlbumTitle(track.album)
-                    .setArtworkUri(android.net.Uri.parse(track.albumArtUri ?: ""))
-                    .setDurationMs(track.duration)
+                    .setTitle(title)
+                    .setArtist(artist)
+                    .setAlbumTitle(album)
+                    .setArtworkUri(android.net.Uri.parse(albumArtUri ?: ""))
+                    .setDurationMs(duration)
                     .build()
             )
             .build()
+    }
+
+    fun play(track: AudioTrack) {
+        val mediaItem = track.toMediaItem()
 
         // Start service FIRST to ensure MediaSession is ready
         startService()
@@ -75,21 +79,7 @@ class PlaybackController @Inject constructor(
     }
     
     fun playAll(tracks: List<AudioTrack>, startIndex: Int = 0) {
-         val mediaItems = tracks.map { track ->
-            MediaItem.Builder()
-                .setUri(track.path)
-                .setMediaId(track.id)
-                .setMediaMetadata(
-                    MediaMetadata.Builder()
-                        .setTitle(track.title)
-                        .setArtist(track.artist)
-                        .setAlbumTitle(track.album)
-                        .setArtworkUri(android.net.Uri.parse(track.albumArtUri ?: ""))
-                        .setDurationMs(track.duration)
-                        .build()
-                )
-                .build()
-        }
+        val mediaItems = tracks.map { it.toMediaItem() }
         
         // Start service FIRST to ensure MediaSession is ready
         startService()
@@ -97,6 +87,40 @@ class PlaybackController @Inject constructor(
         _player.setMediaItems(mediaItems, startIndex, 0L)
         _player.prepare()
         _player.play()
+    }
+
+    fun addTrackToQueue(track: AudioTrack) {
+        _player.addMediaItem(track.toMediaItem())
+        if (_player.playbackState == Player.STATE_IDLE || _player.playbackState == Player.STATE_ENDED) {
+            _player.prepare()
+        }
+    }
+
+    fun addTracksToQueue(tracks: List<AudioTrack>) {
+        _player.addMediaItems(tracks.map { it.toMediaItem() })
+        if (_player.playbackState == Player.STATE_IDLE || _player.playbackState == Player.STATE_ENDED) {
+            _player.prepare()
+        }
+    }
+
+    fun playNext(track: AudioTrack) {
+        val nextIndex = if (_player.mediaItemCount > 0) _player.currentMediaItemIndex + 1 else 0
+        _player.addMediaItem(nextIndex, track.toMediaItem())
+        if (_player.playbackState == Player.STATE_IDLE || _player.playbackState == Player.STATE_ENDED) {
+            _player.prepare()
+        }
+    }
+
+    fun removeFromQueue(index: Int) {
+        if (index in 0 until _player.mediaItemCount) {
+            _player.removeMediaItem(index)
+        }
+    }
+
+    fun moveInQueue(from: Int, to: Int) {
+        if (from in 0 until _player.mediaItemCount && to in 0 until _player.mediaItemCount) {
+            _player.moveMediaItem(from, to)
+        }
     }
 
     private fun startService() {

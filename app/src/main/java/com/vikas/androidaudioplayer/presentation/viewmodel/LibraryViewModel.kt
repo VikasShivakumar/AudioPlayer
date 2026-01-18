@@ -11,6 +11,7 @@ import com.vikas.androidaudioplayer.domain.repository.PlaylistRepository
 import com.vikas.androidaudioplayer.domain.usecase.ManagePlaylistUseCase
 import com.vikas.androidaudioplayer.domain.usecase.PlayTrackUseCase
 import com.vikas.androidaudioplayer.domain.usecase.ScanMediaUseCase
+import com.vikas.androidaudioplayer.service.playback.PlaybackController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,7 +27,8 @@ class LibraryViewModel @Inject constructor(
     private val playlistRepository: PlaylistRepository,
     private val scanMediaUseCase: ScanMediaUseCase,
     private val playTrackUseCase: PlayTrackUseCase,
-    private val managePlaylistUseCase: ManagePlaylistUseCase
+    private val managePlaylistUseCase: ManagePlaylistUseCase,
+    private val playbackController: PlaybackController
 ) : ViewModel() {
 
     private val _isScanning = MutableStateFlow(false)
@@ -87,5 +89,13 @@ class LibraryViewModel @Inject constructor(
         viewModelScope.launch {
             managePlaylistUseCase.addTracks(playlistId, listOf(track.id))
         }
+    }
+
+    fun addToQueue(track: AudioTrack) {
+        playbackController.addTrackToQueue(track)
+    }
+
+    fun playNext(track: AudioTrack) {
+        playbackController.playNext(track)
     }
 }

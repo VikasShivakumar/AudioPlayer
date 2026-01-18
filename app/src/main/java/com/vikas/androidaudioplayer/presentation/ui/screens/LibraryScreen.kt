@@ -21,6 +21,8 @@ import com.vikas.androidaudioplayer.domain.model.Album
 import com.vikas.androidaudioplayer.domain.model.Artist
 import com.vikas.androidaudioplayer.domain.model.AudioTrack
 import com.vikas.androidaudioplayer.domain.model.Playlist
+import com.vikas.androidaudioplayer.presentation.ui.components.AddToPlaylistDialog
+import com.vikas.androidaudioplayer.presentation.ui.components.TrackItem
 import com.vikas.androidaudioplayer.presentation.viewmodel.LibraryViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,7 +79,9 @@ fun LibraryScreen(
                     0 -> TracksList(
                         tracks = tracks, 
                         onTrackClick = onTrackClick,
-                        onAddToPlaylist = { track -> showAddToPlaylistDialog = track }
+                        onAddToPlaylist = { track -> showAddToPlaylistDialog = track },
+                        onAddToQueue = { viewModel.addToQueue(it) },
+                        onPlayNext = { viewModel.playNext(it) }
                     )
                     1 -> AlbumsGrid(albums)
                     2 -> ArtistsList(artists)
@@ -114,43 +118,21 @@ fun EmptyLibraryContent(onScanClick: () -> Unit) {
 }
 
 @Composable
-fun AddToPlaylistDialog(
-    playlists: List<Playlist>,
-    onDismiss: () -> Unit,
-    onPlaylistSelected: (Playlist) -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Add to Playlist") },
-        text = {
-            LazyColumn {
-                items(playlists) { playlist ->
-                    ListItem(
-                        headlineContent = { Text(playlist.name) },
-                        modifier = Modifier.clickable { onPlaylistSelected(playlist) }
-                    )
-                }
-            }
-        },
-        confirmButton = {},
-        dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
-        }
-    )
-}
-
-@Composable
 fun TracksList(
     tracks: List<AudioTrack>, 
     onTrackClick: (AudioTrack) -> Unit,
-    onAddToPlaylist: (AudioTrack) -> Unit
+    onAddToPlaylist: (AudioTrack) -> Unit,
+    onAddToQueue: (AudioTrack) -> Unit,
+    onPlayNext: (AudioTrack) -> Unit
 ) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(tracks) { track ->
             TrackItem(
                 track = track, 
                 onClick = { onTrackClick(track) },
-                onAddToPlaylist = { onAddToPlaylist(track) }
+                onAddToPlaylist = { onAddToPlaylist(track) },
+                onAddToQueue = { onAddToQueue(track) },
+                onPlayNext = { onPlayNext(track) }
             )
         }
     }
@@ -176,44 +158,6 @@ fun ArtistsList(artists: List<Artist>) {
             ArtistItem(artist)
         }
     }
-}
-
-@Composable
-fun TrackItem(
-    track: AudioTrack, 
-    onClick: () -> Unit,
-    onAddToPlaylist: () -> Unit
-) {
-    var showMenu by remember { mutableStateOf(false) }
-
-    ListItem(
-        headlineContent = {
-            Text(track.title, maxLines = 1, overflow = TextOverflow.Ellipsis)
-        },
-        supportingContent = {
-            Text("${track.artist} • ${track.album}", maxLines = 1, overflow = TextOverflow.Ellipsis)
-        },
-        trailingContent = {
-            Box {
-                IconButton(onClick = { showMenu = true }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = "More")
-                }
-                DropdownMenu(
-                    expanded = showMenu,
-                    onDismissRequest = { showMenu = false }
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("Add to Playlist") },
-                        onClick = {
-                            showMenu = false
-                            onAddToPlaylist()
-                        }
-                    )
-                }
-            }
-        },
-        modifier = Modifier.clickable(onClick = onClick)
-    )
 }
 
 @Composable

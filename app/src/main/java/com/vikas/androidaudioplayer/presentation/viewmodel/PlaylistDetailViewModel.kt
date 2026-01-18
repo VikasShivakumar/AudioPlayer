@@ -7,6 +7,7 @@ import com.vikas.androidaudioplayer.domain.model.AudioTrack
 import com.vikas.androidaudioplayer.domain.model.Playlist
 import com.vikas.androidaudioplayer.domain.repository.PlaylistRepository
 import com.vikas.androidaudioplayer.domain.usecase.PlayTrackUseCase
+import com.vikas.androidaudioplayer.service.playback.PlaybackController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -16,6 +17,7 @@ import javax.inject.Inject
 class PlaylistDetailViewModel @Inject constructor(
     private val playlistRepository: PlaylistRepository,
     private val playTrackUseCase: PlayTrackUseCase,
+    private val playbackController: PlaybackController,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -54,5 +56,13 @@ class PlaylistDetailViewModel @Inject constructor(
         viewModelScope.launch {
             playlistRepository.addTracksToPlaylist(playlistId, listOf(track.id))
         }
+    }
+
+    fun addToQueue(track: AudioTrack) {
+        playbackController.addTrackToQueue(track)
+    }
+
+    fun playNext(track: AudioTrack) {
+        playbackController.playNext(track)
     }
 }

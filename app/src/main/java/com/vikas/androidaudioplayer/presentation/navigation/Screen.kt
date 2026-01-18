@@ -15,6 +15,7 @@ sealed class Screen(val route: String, val title: String? = null, val icon: Imag
     
     // Screens without bottom bar entry
     data object NowPlaying : Screen("now_playing")
+    data object PlayingQueue : Screen("playing_queue")
     data object PlaylistDetail : Screen("playlist_detail/{playlistId}") {
         fun createRoute(playlistId: String) = "playlist_detail/$playlistId"
     }

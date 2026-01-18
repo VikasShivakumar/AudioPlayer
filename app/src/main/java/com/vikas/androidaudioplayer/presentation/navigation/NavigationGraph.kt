@@ -15,6 +15,7 @@ import androidx.navigation.navArgument
 import com.vikas.androidaudioplayer.presentation.ui.screens.EqualizerScreen
 import com.vikas.androidaudioplayer.presentation.ui.screens.LibraryScreen
 import com.vikas.androidaudioplayer.presentation.ui.screens.NowPlayingScreen
+import com.vikas.androidaudioplayer.presentation.ui.screens.PlayingQueueScreen
 import com.vikas.androidaudioplayer.presentation.ui.screens.PlaylistDetailScreen
 import com.vikas.androidaudioplayer.presentation.ui.screens.PlaylistsScreen
 import com.vikas.androidaudioplayer.presentation.ui.screens.SearchScreen
@@ -78,6 +79,12 @@ fun NavigationGraph(
         }
         composable(Screen.NowPlaying.route) {
             NowPlayingScreen(
+                onBackClick = { navController.popBackStack() },
+                onQueueClick = { navController.navigate(Screen.PlayingQueue.route) }
+            )
+        }
+        composable(Screen.PlayingQueue.route) {
+            PlayingQueueScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
