@@ -24,13 +24,15 @@ class PlaylistRepositoryImplTest {
     fun `getAllPlaylists maps entities to domain`() = runTest {
         // Given
         val entity = PlaylistWithCount(
-            id = "1",
-            name = "Test Playlist",
-            description = "Description",
-            createdAt = 0L,
-            updatedAt = 0L,
-            trackCount = 5,
-            artworkUri = null
+            playlist = PlaylistEntity(
+                id = "1",
+                name = "Test Playlist",
+                description = "Description",
+                createdAt = 0L,
+                updatedAt = 0L,
+                artworkUri = null
+            ),
+            trackCount = 5
         )
         coEvery { playlistDao.getAllPlaylists() } returns flowOf(listOf(entity))
 

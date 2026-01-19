@@ -13,6 +13,8 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -33,10 +35,10 @@ class AlbumDetailViewModelTest {
     fun `initialization loads album and tracks`() = runTest {
         // Given
         val albumId = "album_1"
-        val expectedAlbum = Album(id = albumId, title = "Test Album", artist = "Test Artist")
+        val expectedAlbum = Album(id = albumId, title = "Test Album", artist = "Test Artist", year = 2023, trackCount = 10, artworkUri = null, duration = 3000L, genre = "Pop")
         val tracks = listOf(
-            AudioTrack(id = 1, title = "Track 1", album = "Test Album", artist = "Test Artist", path = "", duration = 0, albumArtUri = null),
-            AudioTrack(id = 2, title = "Track 2", album = "Other Album", artist = "Other Artist", path = "", duration = 0, albumArtUri = null)
+            AudioTrack(id = "1", title = "Track 1", album = "Test Album", artist = "Test Artist", path = "", duration = 0, albumArtUri = null, albumArtist = null, trackNumber = 1, year = 2023, genre = "Pop", bitrate = 320, sampleRate = 44100, dateAdded = 0, dateModified = 0, size = 0, mimeType = "audio/mp3"),
+            AudioTrack(id = "2", title = "Track 2", album = "Other Album", artist = "Other Artist", path = "", duration = 0, albumArtUri = null, albumArtist = null, trackNumber = 1, year = 2023, genre = "Pop", bitrate = 320, sampleRate = 44100, dateAdded = 0, dateModified = 0, size = 0, mimeType = "audio/mp3")
         )
 
         every { savedStateHandle.get<String>("albumId") } returns albumId
@@ -53,6 +55,14 @@ class AlbumDetailViewModelTest {
         )
 
         // Then
+        // Collect flows to trigger WhileSubscribed
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.album.collect {}
+        }
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.tracks.collect {}
+        }
+
         // Allow state flow to emit
         val albumState = viewModel.album.value
         assertEquals(expectedAlbum, albumState)
@@ -66,8 +76,8 @@ class AlbumDetailViewModelTest {
     fun `playTrack calls use case`() = runTest {
         // Given
         val albumId = "album_1"
-        val expectedAlbum = Album(id = albumId, title = "Test Album", artist = "Test Artist")
-        val track = AudioTrack(id = 1, title = "Track 1", album = "Test Album", artist = "Test Artist", path = "", duration = 0, albumArtUri = null)
+        val expectedAlbum = Album(id = albumId, title = "Test Album", artist = "Test Artist", year = 2023, trackCount = 10, artworkUri = null, duration = 3000L, genre = "Pop")
+        val track = AudioTrack(id = "1", title = "Track 1", album = "Test Album", artist = "Test Artist", path = "", duration = 0, albumArtUri = null, albumArtist = null, trackNumber = 1, year = 2023, genre = "Pop", bitrate = 320, sampleRate = 44100, dateAdded = 0, dateModified = 0, size = 0, mimeType = "audio/mp3")
 
         every { savedStateHandle.get<String>("albumId") } returns albumId
         coEvery { mediaRepository.getAlbums() } returns flowOf(listOf(expectedAlbum))
@@ -82,6 +92,13 @@ class AlbumDetailViewModelTest {
         )
 
         // Ensure tracks are loaded
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.tracks.collect {}
+        }
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.album.collect {}
+        }
+        
         assertEquals(1, viewModel.tracks.value.size)
 
         // When

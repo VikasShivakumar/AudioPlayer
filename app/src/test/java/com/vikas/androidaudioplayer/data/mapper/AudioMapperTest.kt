@@ -11,7 +11,7 @@ class AudioMapperTest {
     fun `AudioTrackEntity toDomain maps correctly`() {
         // Given
         val entity = AudioTrackEntity(
-            id = 1,
+            id = "1",
             title = "Test Title",
             artist = "Test Artist",
             album = "Test Album",
@@ -46,7 +46,7 @@ class AudioMapperTest {
     fun `AudioTrack toEntity maps correctly`() {
         // Given
         val domain = AudioTrack(
-            id = 1,
+            id = "1",
             title = "Test Title",
             artist = "Test Artist",
             album = "Test Album",
