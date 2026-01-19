@@ -124,7 +124,7 @@ This specification outlines the development of a production-grade audio player a
 
 \- \*\*Firebase Analytics\*\* - User behavior tracking
 
-\- \*\*Timber\*\* - Structured logging
+\- \*\*Timber / FileLoggingTree\*\* - Structured logging with persistent file-based logs for production debugging
 
 
 
@@ -619,6 +619,8 @@ data class PlaylistTrackCrossRef(
 \- Handle large libraries (10,000+ tracks) without performance degradation
 
 \- Incremental scanning for new/removed files
+\- \*\*Visual Progress\*\*: Real-time progress indicator during scanning
+\- \*\*Empty Library Handling\*\*: Dedicated empty state with quick-access scan action
 
 
 
@@ -878,13 +880,9 @@ class EqualizerManager(private val audioSessionId: Int) {
 
 \*\*Color Scheme\*\*
 
-\- Dynamic color theming (Material You)
-
-\- Dark mode support (follow system or manual override)
-
-\- Adaptive colors based on album art
-
-\- High contrast mode support
+\- \*\*Premium Dark Aesthetics\*\*: High-contrast dark theme by default for a premium feel
+- \*\*Consistent Visual Brand\*\*: Explicitly disabled dynamic color (Material You) to maintain a controlled, high-end aesthetic across all devices
+- \*\*Adaptive UI\*\*: High contrast mode support
 
 
 
@@ -938,8 +936,8 @@ val Typography = Typography(
 
 \*\*1. Now Playing Screen\*\*
 
-\- Full-screen album art with blur background
-
+\- \*\*Vinyl Record Aesthetic\*\*: Circular album art with infinite rotation animation during playback
+\- Custom gramophone icon fallback for tracks without artwork
 \- Large play/pause button (56dp)
 
 \- Track progress slider with time indicators
@@ -1071,7 +1069,7 @@ val Typography = Typography(
 \- Create/rename/delete playlists
 
 \- Add/remove tracks from playlists
-
+\- \*\*Batch Track Addition\*\*: Searchable dialog for adding multiple tracks to a playlist simultaneously
 \- Reorder tracks with drag-and-drop
 
 \- Duplicate playlists
@@ -2091,6 +2089,12 @@ FirebaseCrashlytics.getInstance().apply {
 \- Opt-out mechanism in settings
 
 \- GDPR/CCPA compliance
+
+\### 13.4 Local File Logging
+\- \*\*Persistent Logs\*\*: Daily log files stored in app's internal storage
+\- \*\*Structured Format\*\*: Timestamped logs with priority levels and tags
+\- \*\*Auto-Cleanup\*\*: Automatic deletion of logs older than 7 days to preserve storage
+\- \*\*Production Debugging\*\*: Allows capturing issues that occur in the field without real-time tracking
 
 
 
