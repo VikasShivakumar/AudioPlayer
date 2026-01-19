@@ -11,12 +11,20 @@ import androidx.car.app.model.Template
 class MainCarScreen(carContext: CarContext) : Screen(carContext) {
     override fun onGetTemplate(): Template {
         val row = Row.Builder()
-            .setTitle("Welcome to Audio Player")
-            .addText("Use the phone app to manage library.")
+            .setTitle("Welcome to Your Audio Player")
+            .addText("Enjoy your premium music experience.")
             .build()
 
         val pane = Pane.Builder()
             .addRow(row)
+            .addAction(
+                Action.Builder()
+                    .setTitle("Open Library")
+                    .setOnClickListener {
+                        // Handled by the native media browser
+                    }
+                    .build()
+            )
             .build()
 
         return PaneTemplate.Builder(pane)

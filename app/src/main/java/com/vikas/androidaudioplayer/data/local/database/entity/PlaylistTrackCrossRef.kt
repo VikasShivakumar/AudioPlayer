@@ -3,11 +3,11 @@ package com.vikas.androidaudioplayer.data.local.database.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 
 @Entity(
     tableName = "playlist_tracks",
-    primaryKeys = ["playlist_id", "position"], // Composite PK to allow same track multiple times if needed, or better, use an auto-gen ID for the join table row. But PRD suggests position. 
-    // Actually, primaryKeys = ["playlist_id", "position"] allows duplicate tracks in a playlist at different positions, which is correct.
+    primaryKeys = ["playlist_id", "position"],
     foreignKeys = [
         ForeignKey(
             entity = PlaylistEntity::class,
@@ -21,7 +21,8 @@ import androidx.room.ForeignKey
             childColumns = ["track_id"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index("track_id")]
 )
 data class PlaylistTrackCrossRef(
     @ColumnInfo(name = "playlist_id") val playlistId: String,

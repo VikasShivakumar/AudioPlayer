@@ -92,6 +92,7 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.car.app)
+    implementation(libs.kotlinx.coroutines.guava)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)

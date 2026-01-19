@@ -19,5 +19,11 @@ sealed class Screen(val route: String, val title: String? = null, val icon: Imag
     data object PlaylistDetail : Screen("playlist_detail/{playlistId}") {
         fun createRoute(playlistId: String) = "playlist_detail/$playlistId"
     }
+    data object AlbumDetail : Screen("album_detail/{albumId}") {
+        fun createRoute(albumId: String) = "album_detail/$albumId"
+    }
+    data object ArtistDetail : Screen("artist_detail/{artistId}") {
+        fun createRoute(artistId: String) = "artist_detail/$artistId"
+    }
     data object Equalizer : Screen("equalizer")
 }

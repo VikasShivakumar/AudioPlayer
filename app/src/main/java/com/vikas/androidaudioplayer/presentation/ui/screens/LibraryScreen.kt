@@ -29,6 +29,8 @@ import com.vikas.androidaudioplayer.presentation.viewmodel.LibraryViewModel
 @Composable
 fun LibraryScreen(
     onTrackClick: (AudioTrack) -> Unit,
+    onAlbumClick: (String) -> Unit,
+    onArtistClick: (String) -> Unit,
     viewModel: LibraryViewModel = hiltViewModel()
 ) {
     val tracks by viewModel.tracks.collectAsState()
@@ -83,8 +85,8 @@ fun LibraryScreen(
                         onAddToQueue = { viewModel.addToQueue(it) },
                         onPlayNext = { viewModel.playNext(it) }
                     )
-                    1 -> AlbumsGrid(albums)
-                    2 -> ArtistsList(artists)
+                    1 -> AlbumsGrid(albums, onAlbumClick)
+                    2 -> ArtistsList(artists, onArtistClick)
                 }
             }
         }
@@ -139,34 +141,44 @@ fun TracksList(
 }
 
 @Composable
-fun AlbumsGrid(albums: List<Album>) {
+fun AlbumsGrid(
+    albums: List<Album>,
+    onAlbumClick: (String) -> Unit
+) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 128.dp),
         contentPadding = PaddingValues(8.dp),
         modifier = Modifier.fillMaxSize()
     ) {
         items(albums) { album ->
-            AlbumItem(album)
+            AlbumItem(album, onClick = { onAlbumClick(album.id) })
         }
     }
 }
 
 @Composable
-fun ArtistsList(artists: List<Artist>) {
+fun ArtistsList(
+    artists: List<Artist>,
+    onArtistClick: (String) -> Unit
+) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(artists) { artist ->
-            ArtistItem(artist)
+            ArtistItem(artist, onClick = { onArtistClick(artist.id) })
         }
     }
 }
 
 @Composable
-fun AlbumItem(album: Album) {
+fun AlbumItem(
+    album: Album,
+    onClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .padding(4.dp)
             .fillMaxWidth()
             .aspectRatio(0.8f)
+            .clickable(onClick = onClick)
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
             Surface(
@@ -187,8 +199,12 @@ fun AlbumItem(album: Album) {
 }
 
 @Composable
-fun ArtistItem(artist: Artist) {
+fun ArtistItem(
+    artist: Artist,
+    onClick: () -> Unit
+) {
     ListItem(
+        modifier = Modifier.clickable(onClick = onClick),
         headlineContent = { Text(artist.name) },
         supportingContent = { Text("${artist.albumCount} albums • ${artist.trackCount} tracks") },
         leadingContent = {

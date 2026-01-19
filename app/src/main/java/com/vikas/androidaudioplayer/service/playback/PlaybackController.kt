@@ -14,6 +14,7 @@ import android.content.Intent
 import com.vikas.androidaudioplayer.MainActivity
 import javax.inject.Inject
 import javax.inject.Singleton
+import androidx.core.net.toUri
 
 @Singleton
 class PlaybackController @Inject constructor(
@@ -51,33 +52,6 @@ class PlaybackController @Inject constructor(
 
     val player: Player get() = _player
 
-    private fun AudioTrack.toMediaItem(): MediaItem {
-        return MediaItem.Builder()
-            .setUri(path)
-            .setMediaId(id)
-            .setMediaMetadata(
-                MediaMetadata.Builder()
-                    .setTitle(title)
-                    .setArtist(artist)
-                    .setAlbumTitle(album)
-                    .setArtworkUri(android.net.Uri.parse(albumArtUri ?: ""))
-                    .setDurationMs(duration)
-                    .build()
-            )
-            .build()
-    }
-
-    fun play(track: AudioTrack) {
-        val mediaItem = track.toMediaItem()
-
-        // Start service FIRST to ensure MediaSession is ready
-        startService()
-        
-        _player.setMediaItem(mediaItem)
-        _player.prepare()
-        _player.play()
-    }
-    
     fun playAll(tracks: List<AudioTrack>, startIndex: Int = 0) {
         val mediaItems = tracks.map { it.toMediaItem() }
         
@@ -134,5 +108,21 @@ class PlaybackController @Inject constructor(
 
     fun release() {
         _player.release()
+    }
+
+    private fun AudioTrack.toMediaItem(): MediaItem {
+        return MediaItem.Builder()
+            .setUri(path)
+            .setMediaId(id)
+            .setMediaMetadata(
+                MediaMetadata.Builder()
+                    .setTitle(title)
+                    .setArtist(artist)
+                    .setAlbumTitle(album)
+                    .setArtworkUri((albumArtUri ?: "").toUri())
+                    .setDurationMs(duration)
+                    .build()
+            )
+            .build()
     }
 }

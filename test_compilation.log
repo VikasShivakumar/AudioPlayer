@@ -1,0 +1,58 @@
+Configuration on demand is an incubating feature.
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:kspDebugKotlin
+> Task :app:compileDebugKotlin
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:hiltAggregateDepsDebug UP-TO-DATE
+> Task :app:hiltJavaCompileDebug UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:kspDebugUnitTestKotlin
+
+> Task :app:compileDebugUnitTestKotlin FAILED
+e: file:///C:/Users/Vikas%20Shivakumar/source/repos/Personal/AndroidAudioPlayer/app/src/test/java/com/vikas/androidaudioplayer/domain/usecase/ManagePlaylistUseCaseTest.kt:30:59 No value passed for parameter 'createdAt'.
+e: file:///C:/Users/Vikas%20Shivakumar/source/repos/Personal/AndroidAudioPlayer/app/src/test/java/com/vikas/androidaudioplayer/domain/usecase/ManagePlaylistUseCaseTest.kt:30:59 No value passed for parameter 'updatedAt'.
+e: file:///C:/Users/Vikas%20Shivakumar/source/repos/Personal/AndroidAudioPlayer/app/src/test/java/com/vikas/androidaudioplayer/domain/usecase/PlayTrackUseCaseTest.kt:36:26 Argument type mismatch: actual type is 'com.vikas.androidaudioplayer.domain.model.AudioTrack', but 'kotlin.collections.List<com.vikas.androidaudioplayer.domain.model.AudioTrack>' was expected.
+e: file:///C:/Users/Vikas%20Shivakumar/source/repos/Personal/AndroidAudioPlayer/app/src/test/java/com/vikas/androidaudioplayer/presentation/viewmodel/AlbumDetailViewModelTest.kt:31:60 Null cannot be a value of a non-null type 'kotlin.Int'.
+e: file:///C:/Users/Vikas%20Shivakumar/source/repos/Personal/AndroidAudioPlayer/app/src/test/java/com/vikas/androidaudioplayer/presentation/viewmodel/AlbumDetailViewModelTest.kt:31:60 No value passed for parameter 'artworkUri'.
+e: file:///C:/Users/Vikas%20Shivakumar/source/repos/Personal/AndroidAudioPlayer/app/src/test/java/com/vikas/androidaudioplayer/presentation/viewmodel/AlbumDetailViewModelTest.kt:31:60 No value passed for parameter 'duration'.
+e: file:///C:/Users/Vikas%20Shivakumar/source/repos/Personal/AndroidAudioPlayer/app/src/test/java/com/vikas/androidaudioplayer/presentation/viewmodel/AlbumDetailViewModelTest.kt:31:60 No value passed for parameter 'genre'.
+e: file:///C:/Users/Vikas%20Shivakumar/source/repos/Personal/AndroidAudioPlayer/app/src/test/java/com/vikas/androidaudioplayer/presentation/viewmodel/SettingsViewModelTest.kt:31:59 Argument type mismatch: actual type is 'kotlinx.coroutines.flow.Flow<kotlin.Nothing?>', but 'kotlinx.coroutines.flow.StateFlow<kotlin.Long?>' was expected.
+e: file:///C:/Users/Vikas%20Shivakumar/source/repos/Personal/AndroidAudioPlayer/app/src/test/java/com/vikas/androidaudioplayer/presentation/viewmodel/SettingsViewModelTest.kt:43:59 Argument type mismatch: actual type is 'kotlinx.coroutines.flow.Flow<kotlin.Nothing?>', but 'kotlinx.coroutines.flow.StateFlow<kotlin.Long?>' was expected.
+e: file:///C:/Users/Vikas%20Shivakumar/source/repos/Personal/AndroidAudioPlayer/app/src/test/java/com/vikas/androidaudioplayer/util/MainDispatcherRule.kt:10:18 Unresolved reference 'description'.
+e: file:///C:/Users/Vikas%20Shivakumar/source/repos/Personal/AndroidAudioPlayer/app/src/test/java/com/vikas/androidaudioplayer/util/MainDispatcherRule.kt:16:5 'starting' overrides nothing.
+e: file:///C:/Users/Vikas%20Shivakumar/source/repos/Personal/AndroidAudioPlayer/app/src/test/java/com/vikas/androidaudioplayer/util/MainDispatcherRule.kt:16:40 Unresolved reference 'Description'.
+e: file:///C:/Users/Vikas%20Shivakumar/source/repos/Personal/AndroidAudioPlayer/app/src/test/java/com/vikas/androidaudioplayer/util/MainDispatcherRule.kt:20:5 'finished' overrides nothing.
+e: file:///C:/Users/Vikas%20Shivakumar/source/repos/Personal/AndroidAudioPlayer/app/src/test/java/com/vikas/androidaudioplayer/util/MainDispatcherRule.kt:20:40 Unresolved reference 'Description'.
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugUnitTestKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+23 actionable tasks: 5 executed, 18 up-to-date
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 8s

@@ -39,6 +39,12 @@ fun NavigationGraph(
                     viewModel.playTrack(track)
                     navController.navigate(Screen.NowPlaying.route)
                 },
+                onAlbumClick = { albumId ->
+                    navController.navigate(Screen.AlbumDetail.createRoute(albumId))
+                },
+                onArtistClick = { artistId ->
+                     navController.navigate(Screen.ArtistDetail.createRoute(artistId))
+                },
                 viewModel = viewModel
             )
         }
@@ -86,6 +92,28 @@ fun NavigationGraph(
         composable(Screen.PlayingQueue.route) {
             PlayingQueueScreen(
                 onBackClick = { navController.popBackStack() }
+            )
+        }
+        composable(
+            route = Screen.AlbumDetail.route,
+            arguments = listOf(navArgument("albumId") { type = NavType.StringType })
+        ) {
+            com.vikas.androidaudioplayer.presentation.ui.screens.AlbumDetailScreen(
+                onBackClick = { navController.popBackStack() },
+                onTrackClick = {
+                    navController.navigate(Screen.NowPlaying.route)
+                }
+            )
+        }
+        composable(
+            route = Screen.ArtistDetail.route,
+            arguments = listOf(navArgument("artistId") { type = NavType.StringType })
+        ) {
+             com.vikas.androidaudioplayer.presentation.ui.screens.ArtistDetailScreen(
+                onBackClick = { navController.popBackStack() },
+                onTrackClick = {
+                    navController.navigate(Screen.NowPlaying.route)
+                }
             )
         }
     }

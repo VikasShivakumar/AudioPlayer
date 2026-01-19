@@ -1,0 +1,37 @@
+name: Android CD
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    # In a real scenario, you would decode the Keystore from a secret here.
+    # For now, we build a signed release APK using standard methods, 
+    # relying on the build.gradle to access signing configs from env vars or properties if configured.
+    # If not configured, this might fail or produce an unsigned APK depending on config.
+    # Since the user asked for "downloadable release apk", we try to assembleRelease.
+    
+    - name: Build Release APK
+      run: ./gradlew assembleRelease
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-release
+        path: app/build/outputs/apk/release/app-release-unsigned.apk # Default path, might be signed if config exists

@@ -12,8 +12,10 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.vikas.androidaudioplayer.R
 import com.vikas.androidaudioplayer.domain.model.AudioTrack
 import com.vikas.androidaudioplayer.presentation.ui.components.AddToPlaylistDialog
 import com.vikas.androidaudioplayer.presentation.ui.components.TrackItem
@@ -38,12 +40,12 @@ fun SearchScreen(
             onSearch = {},
             active = false,
             onActiveChange = {},
-            placeholder = { Text("Search tracks, artists, albums") },
+            placeholder = { Text(stringResource(R.string.search)) },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             trailingIcon = {
                 if (query.isNotEmpty()) {
                     IconButton(onClick = { viewModel.onQueryChange("") }) {
-                        Icon(Icons.Default.Clear, contentDescription = "Clear")
+                        Icon(Icons.Default.Clear, contentDescription = stringResource(R.string.cancel))
                     }
                 }
             },

@@ -1,6 +1,7 @@
 package com.vikas.androidaudioplayer.data.mapper
 
 import com.vikas.androidaudioplayer.data.local.database.entity.PlaylistEntity
+import com.vikas.androidaudioplayer.data.local.database.model.PlaylistWithCount
 import com.vikas.androidaudioplayer.domain.model.Playlist
 
 fun PlaylistEntity.toDomain(trackIds: List<String> = emptyList(), trackCount: Int = 0): Playlist {
@@ -15,6 +16,11 @@ fun PlaylistEntity.toDomain(trackIds: List<String> = emptyList(), trackCount: In
         trackIds = trackIds
     )
 }
+
+fun PlaylistWithCount.toDomain(trackIds: List<String> = emptyList()): Playlist {
+    return playlist.toDomain(trackIds = trackIds, trackCount = trackCount)
+}
+
 
 fun Playlist.toEntity(): PlaylistEntity {
     return PlaylistEntity(
