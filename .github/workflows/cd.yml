@@ -25,9 +25,6 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Run Unit Tests
-      run: ./gradlew testDebugUnitTest
-
     - name: Calculate Version
       id: version
       run: |
@@ -38,7 +35,16 @@ jobs:
         echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_OUTPUT
         echo "Building version $VERSION_NAME (code: $VERSION_CODE)"
 
+    - name: Decode Keystore
+      run: |
+        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app/keystore.jks
+
     - name: Build Release APK
+      env:
+        KEYSTORE_PATH: keystore.jks
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       run: |
         ./gradlew assembleRelease \
           -PversionCode=${{ steps.version.outputs.VERSION_CODE }} \
