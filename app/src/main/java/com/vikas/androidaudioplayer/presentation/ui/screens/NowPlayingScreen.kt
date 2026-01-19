@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.PauseCircleFilled
 import androidx.compose.material.icons.filled.PlayCircleFilled
 import androidx.compose.material.icons.filled.SkipNext
@@ -48,6 +49,7 @@ import com.vikas.androidaudioplayer.util.Formatter
 @Composable
 fun NowPlayingScreen(
     onBackClick: () -> Unit = {},
+    onQueueClick: () -> Unit = {},
     viewModel: NowPlayingViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -63,10 +65,13 @@ fun NowPlayingScreen(
         // Header
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(onClick = onBackClick) {
                 Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Collapse")
+            }
+            IconButton(onClick = onQueueClick) {
+                Icon(Icons.Default.List, contentDescription = "Playing Queue")
             }
         }
 

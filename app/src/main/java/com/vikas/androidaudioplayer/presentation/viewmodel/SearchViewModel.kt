@@ -8,6 +8,7 @@ import com.vikas.androidaudioplayer.domain.repository.MediaRepository
 import com.vikas.androidaudioplayer.domain.repository.PlaylistRepository
 import com.vikas.androidaudioplayer.domain.usecase.ManagePlaylistUseCase
 import com.vikas.androidaudioplayer.domain.usecase.PlayTrackUseCase
+import com.vikas.androidaudioplayer.service.playback.PlaybackController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -18,7 +19,8 @@ class SearchViewModel @Inject constructor(
     private val mediaRepository: MediaRepository,
     private val playlistRepository: PlaylistRepository,
     private val playTrackUseCase: PlayTrackUseCase,
-    private val managePlaylistUseCase: ManagePlaylistUseCase
+    private val managePlaylistUseCase: ManagePlaylistUseCase,
+    private val playbackController: PlaybackController
 ) : ViewModel() {
 
     private val _query = MutableStateFlow("")
@@ -66,5 +68,13 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             managePlaylistUseCase.addTracks(playlistId, listOf(track.id))
         }
+    }
+
+    fun addToQueue(track: AudioTrack) {
+        playbackController.addTrackToQueue(track)
+    }
+
+    fun playNext(track: AudioTrack) {
+        playbackController.playNext(track)
     }
 }

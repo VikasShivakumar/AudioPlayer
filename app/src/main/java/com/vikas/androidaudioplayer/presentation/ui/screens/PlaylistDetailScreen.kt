@@ -10,6 +10,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.vikas.androidaudioplayer.domain.model.AudioTrack
+import com.vikas.androidaudioplayer.presentation.ui.components.AddToPlaylistDialog
+import com.vikas.androidaudioplayer.presentation.ui.components.TrackItem
 import com.vikas.androidaudioplayer.presentation.viewmodel.PlaylistDetailViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +53,9 @@ fun PlaylistDetailScreen(
                     },
                     onAddToPlaylist = {
                         showAddToPlaylistDialog = track
-                    }
+                    },
+                    onAddToQueue = { viewModel.addToQueue(track) },
+                    onPlayNext = { viewModel.playNext(track) }
                 )
             }
         }

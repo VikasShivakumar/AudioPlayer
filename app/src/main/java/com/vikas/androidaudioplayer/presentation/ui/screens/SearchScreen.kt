@@ -15,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.vikas.androidaudioplayer.domain.model.AudioTrack
+import com.vikas.androidaudioplayer.presentation.ui.components.AddToPlaylistDialog
+import com.vikas.androidaudioplayer.presentation.ui.components.TrackItem
 import com.vikas.androidaudioplayer.presentation.viewmodel.SearchViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,7 +62,9 @@ fun SearchScreen(
                         viewModel.playTrack(track)
                         onTrackClick(track)
                     },
-                    onAddToPlaylist = { showAddToPlaylistDialog = track }
+                    onAddToPlaylist = { showAddToPlaylistDialog = track },
+                    onAddToQueue = { viewModel.addToQueue(track) },
+                    onPlayNext = { viewModel.playNext(track) }
                 )
             }
         }

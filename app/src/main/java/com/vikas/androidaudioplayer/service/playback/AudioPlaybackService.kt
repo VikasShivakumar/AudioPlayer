@@ -150,7 +150,8 @@ class AudioPlaybackService : MediaSessionService() {
     override fun onDestroy() {
         Timber.d("AudioPlaybackService onDestroy")
         mediaSession?.run {
-            player.release()
+            // We DON'T release the player here because it's managed by the Singleton PlaybackController.
+            // Releasing it here would break play buttons if the service is destroyed but the app is still alive.
             release()
             mediaSession = null
         }
