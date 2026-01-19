@@ -58,9 +58,33 @@ class PlaybackController @Inject constructor(
         // Start service FIRST to ensure MediaSession is ready
         startService()
         
+        _player.shuffleModeEnabled = false
         _player.setMediaItems(mediaItems, startIndex, 0L)
         _player.prepare()
         _player.play()
+    }
+
+    fun shuffleAll(tracks: List<AudioTrack>) {
+        val mediaItems = tracks.map { it.toMediaItem() }
+
+        startService()
+
+        _player.setMediaItems(mediaItems)
+        _player.shuffleModeEnabled = true
+        _player.prepare()
+        _player.play()
+    }
+
+    fun toggleShuffle() {
+        _player.shuffleModeEnabled = !_player.shuffleModeEnabled
+    }
+
+    fun toggleRepeatMode() {
+        _player.repeatMode = when (_player.repeatMode) {
+            Player.REPEAT_MODE_OFF -> Player.REPEAT_MODE_ALL
+            Player.REPEAT_MODE_ALL -> Player.REPEAT_MODE_ONE
+            else -> Player.REPEAT_MODE_OFF
+        }
     }
 
     fun addTrackToQueue(track: AudioTrack) {
@@ -111,18 +135,20 @@ class PlaybackController @Inject constructor(
     }
 
     private fun AudioTrack.toMediaItem(): MediaItem {
+        val metadataBuilder = MediaMetadata.Builder()
+            .setTitle(title)
+            .setArtist(artist)
+            .setAlbumTitle(album)
+            .setDurationMs(duration)
+
+        albumArtUri?.let {
+            metadataBuilder.setArtworkUri(it.toUri())
+        }
+
         return MediaItem.Builder()
             .setUri(path)
             .setMediaId(id)
-            .setMediaMetadata(
-                MediaMetadata.Builder()
-                    .setTitle(title)
-                    .setArtist(artist)
-                    .setAlbumTitle(album)
-                    .setArtworkUri((albumArtUri ?: "").toUri())
-                    .setDurationMs(duration)
-                    .build()
-            )
+            .setMediaMetadata(metadataBuilder.build())
             .build()
     }
 }

@@ -19,7 +19,9 @@ data class NowPlayingState(
     val currentPosition: Long = 0L,
     val duration: Long = 0L,
     val queue: List<MediaItem> = emptyList(),
-    val currentMediaItemIndex: Int = -1
+    val currentMediaItemIndex: Int = -1,
+    val shuffleModeEnabled: Boolean = false,
+    val repeatMode: Int = Player.REPEAT_MODE_OFF
 )
 
 @HiltViewModel
@@ -46,6 +48,14 @@ class NowPlayingViewModel @Inject constructor(
         override fun onTimelineChanged(timeline: androidx.media3.common.Timeline, reason: Int) {
             updateState()
         }
+
+        override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+            updateState()
+        }
+
+        override fun onRepeatModeChanged(repeatMode: Int) {
+            updateState()
+        }
     }
 
     init {
@@ -66,7 +76,9 @@ class NowPlayingViewModel @Inject constructor(
             isPlaying = player.isPlaying,
             duration = player.duration.coerceAtLeast(0L),
             queue = queue,
-            currentMediaItemIndex = player.currentMediaItemIndex
+            currentMediaItemIndex = player.currentMediaItemIndex,
+            shuffleModeEnabled = player.shuffleModeEnabled,
+            repeatMode = player.repeatMode
         )
     }
 
@@ -121,6 +133,14 @@ class NowPlayingViewModel @Inject constructor(
 
     fun moveInQueue(from: Int, to: Int) {
         playbackController.moveInQueue(from, to)
+    }
+
+    fun toggleShuffle() {
+        playbackController.toggleShuffle()
+    }
+
+    fun toggleRepeatMode() {
+        playbackController.toggleRepeatMode()
     }
 
     override fun onCleared() {

@@ -85,6 +85,20 @@ class LibraryViewModel @Inject constructor(
         }
     }
 
+    fun playAllTracks() {
+        val currentTracks = tracks.value
+        if (currentTracks.isNotEmpty()) {
+            playbackController.playAll(currentTracks)
+        }
+    }
+
+    fun shuffleAll() {
+        val currentTracks = tracks.value
+        if (currentTracks.isNotEmpty()) {
+            playbackController.shuffleAll(currentTracks)
+        }
+    }
+
     fun addTrackToPlaylist(playlistId: String, track: AudioTrack) {
         viewModelScope.launch {
             managePlaylistUseCase.addTracks(playlistId, listOf(track.id))
