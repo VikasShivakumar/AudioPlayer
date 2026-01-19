@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.item
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -134,7 +135,7 @@ fun EmptyLibraryContent(onScanClick: () -> Unit) {
 
 @Composable
 fun TracksList(
-    tracks: List<AudioTrack>, 
+    tracks: List<AudioTrack>,
     onTrackClick: (AudioTrack) -> Unit,
     onAddToPlaylist: (AudioTrack) -> Unit,
     onAddToQueue: (AudioTrack) -> Unit,
@@ -150,56 +151,60 @@ fun TracksList(
             state = listState,
             modifier = Modifier.fillMaxSize()
         ) {
-        item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Button(
-                    onClick = onPlayAll,
-                    modifier = Modifier.weight(1f).padding(horizontal = 4.dp)
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Icon(Icons.Default.PlayArrow, contentDescription = null)
-                    Spacer(Modifier.width(8.dp))
-                    Text("Play All")
-                }
-                Button(
-                    onClick = onShuffleAll,
-                    modifier = Modifier.weight(1f).padding(horizontal = 4.dp)
-                ) {
-                    Icon(Icons.Default.Shuffle, contentDescription = null)
-                    Spacer(Modifier.width(8.dp))
-                    Text("Shuffle All")
+                    Button(
+                        onClick = onPlayAll,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(horizontal = 4.dp)
+                    ) {
+                        Icon(Icons.Default.PlayArrow, contentDescription = null)
+                        Spacer(Modifier.width(8.dp))
+                        Text("Play All")
+                    }
+                    Button(
+                        onClick = onShuffleAll,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(horizontal = 4.dp)
+                    ) {
+                        Icon(Icons.Default.Shuffle, contentDescription = null)
+                        Spacer(Modifier.width(8.dp))
+                        Text("Shuffle All")
+                    }
                 }
             }
+            items(tracks) { track ->
+                TrackItem(
+                    track = track,
+                    onClick = { onTrackClick(track) },
+                    onAddToPlaylist = { onAddToPlaylist(track) },
+                    onAddToQueue = { onAddToQueue(track) },
+                    onPlayNext = { onPlayNext(track) }
+                )
+            }
         }
-        items(tracks) { track ->
-            TrackItem(
-                track = track, 
-                onClick = { onTrackClick(track) },
-                onAddToPlaylist = { onAddToPlaylist(track) },
-                onAddToQueue = { onAddToQueue(track) },
-                onPlayNext = { onPlayNext(track) }
-            )
-        }
-    }
 
-    AlphabetScroller(
-        onLetterClick = { letter ->
-            val index = tracks.indexOfFirst {
-                if (letter == '#') it.title.isNotEmpty() && !it.title[0].isLetter()
-                else it.title.startsWith(letter, ignoreCase = true)
-            }
-            if (index != -1) {
-                coroutineScope.launch {
-                    listState.scrollToItem(index + 1) // +1 for header
+        AlphabetScroller(
+            onLetterClick = { letter ->
+                val index = tracks.indexOfFirst {
+                    if (letter == '#') it.title.isNotEmpty() && !it.title[0].isLetter()
+                    else it.title.startsWith(letter, ignoreCase = true)
                 }
-            }
-        },
-        modifier = Modifier.align(Alignment.CenterEnd)
-    )
+                if (index != -1) {
+                    coroutineScope.launch {
+                        listState.scrollToItem(index + 1) // +1 for header
+                    }
+                }
+            },
+            modifier = Modifier.align(Alignment.CenterEnd)
+        )
     }
 }
 
